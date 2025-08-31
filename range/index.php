@@ -6,10 +6,12 @@ header('ACCESS-CONTROL-ALLOW-METHODS: GET');
 class Playlist {
     private $songs = [];
     private $index = 0;
+    private $filename = '';
 
-    public function __construct($songs, $index) {
+    public function __construct($songs, $index, $filename) {
         $this->songs = $songs;
         $this->index = $index;
+        $this->filename = $filename;
     }
     // public function addSong($song) {
     //     $this->songs[] = $song;
@@ -21,6 +23,39 @@ class Playlist {
             return $this->songs[$this->index];
         }
         return null;
+    }
+
+    public function getSongs() {
+        $filename = $this->filename;
+        $fplaylist = fopen($filename,"r");
+        if ($fplaylist) {
+            while (!feof($fplaylist)) {
+                while (($line = fgets($fplaylist)) !== false ) {
+                
+                    if (preg_match("/.*/", $line, $matches)) {
+                        $playlist = $matches[0];
+                        $index = $this->index;
+                        return $presents = new Playlist(explode("\n", trim(file_get_contents("./points/playlist"))), $index, "./points/playlist");
+                        
+                    }                      
+
+                }    
+            }
+        }
+    }
+
+    public function redirectCurrentSong() {
+        
+        $presents = $this->getSongs();
+        
+        if($presents !== false) {
+            header('Location: '.$presents->getCurrentSong());
+            exit();
+            
+        } else {
+            header('Location: https://www.youtube.com/watch?v=gdFo3dyhlQM');
+            exit();
+        }
     }
     
 }
@@ -35,30 +70,9 @@ switch ($localhost) {
     case '/contact':
         echo "GEOINT REF:9283";
         exit();
-    case "/playlist":
-        $fplaylist = fopen("./points/playlist","r");
-        if ($fplaylist) {
-            while (!feof($fplaylist)) {
-                while (($line = fgets($fplaylist)) !== false ) {
-                
-                    if (preg_match("/.*/", $line, $matches)) {
-                        $playlist = $matches[0];
-                        
-                        $presents = new Playlist(explode("\n", trim(file_get_contents("./points/playlist"))), $playline);
-                        
-                    }                      
-
-                }    
-            }
-        }
-        
-        if($presents !== false) {
-            header('Location: '.$presents->getCurrentSong());
-            
-        } else {
-            header('Location: https://www.youtube.com/watch?v=gdFo3dyhlQM');
-            
-        }
+    case "/playlist-redirect":
+        $instance = new Playlist(explode("\n", trim(file_get_contents("./points/playlist"))), $playline, "./points/playlist");
+        $instance->redirectCurrentSong();
         exit();
     case "/playlist-next":
         $playline++;
@@ -68,6 +82,10 @@ switch ($localhost) {
         exit();
     case "/playlist-reset":
         $playline = 0;
+        exit();
+    case "/playlist":
+        $instance = new Playlist(explode("\n", trim(file_get_contents("./points/playlist"))), $playline, "./points/playlist");
+        $instance->getCurrentSong();
         exit();
     case "/presents":
         
@@ -99,7 +117,7 @@ switch ($localhost) {
         exit();
     default:
         echo "Home page";
-        exit()
+        exit();
 }
 
 ?>
