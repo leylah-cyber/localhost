@@ -1,5 +1,5 @@
 <?php 
-// filepath: c:/Users/Leylah/Documents/php/localhost/range/index.php
+// filepath: ./range/index.php
 $localhost = $_SERVER['REQUEST_URI'];
 
 switch ($localhost) {
