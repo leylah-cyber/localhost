@@ -1,7 +1,7 @@
 <?php 
 // filepath: ./range/index.php
 $localhost = $_SERVER['REQUEST_URI'];
-header('ACCESS-CONTROL-ALLOW-ORIGIN: *');
+//header('ACCESS-CONTROL-ALLOW-ORIGIN: *');
 header('ACCESS-CONTROL-ALLOW-METHODS: GET');
 class Playlist {
     private $songs = [];
@@ -44,6 +44,10 @@ class Playlist {
         }
     }
 
+    public function index($index){
+        $this->index = $index;
+    }
+
     public function redirectCurrentSong() {
         
         $presents = $this->getSongs();
@@ -83,9 +87,12 @@ switch ($localhost) {
     case "/playlist-reset":
         $playline = 0;
         exit();
-    case "/playlist":
+    case "/playlist-current":
         $instance = new Playlist(explode("\n", trim(file_get_contents("./points/playlist"))), $playline, "./points/playlist");
-        $instance->getCurrentSong();
+        echo $instance->getCurrentSong();
+        exit();
+    case "/playlist":
+
         exit();
     case "/presents":
         
@@ -116,7 +123,6 @@ switch ($localhost) {
         
         exit();
     default:
-        echo "Home page";
         exit();
 }
 
