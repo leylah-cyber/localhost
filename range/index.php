@@ -13,9 +13,6 @@ class Playlist {
         $this->index = $index;
         $this->filename = $filename;
     }
-    // public function addSong($song) {
-    //     $this->songs[] = $song;
-    // }
     
     public function getCurrentSong() {
         
@@ -123,7 +120,7 @@ switch ($localhost) {
         
         exit();
     default:
-        exit();
+        break;
 }
 
 ?>
